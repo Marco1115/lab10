@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.module.ModuleDescriptor.Builder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -38,7 +37,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
         this.model = new DrawNumberImpl(conf.getMin(), conf.getMax(), conf.getAttempts());
     }
 
-    private Configuration readConfiguration(String path) {
+    private Configuration readConfiguration(final String path) {
         final Configuration.Builder confBuilder = new Configuration.Builder();
         try (BufferedReader inStream = new BufferedReader(new InputStreamReader(new FileInputStream(PATH)))) {
             for (int i = 0; i < 3; i++) {
