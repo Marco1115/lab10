@@ -13,7 +13,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 
 /**
@@ -64,7 +63,9 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Optional.filter
          */
-        return emptyList();
+        final List<Optional<T>> result = new ArrayList<>();
+        list.forEach(t -> result.add(Optional.of(t).filter(pre)));
+        return result;
     }
 
     /**
