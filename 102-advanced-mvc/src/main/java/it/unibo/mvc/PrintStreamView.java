@@ -58,4 +58,9 @@ public final class PrintStreamView implements DrawNumberView {
         out.println(res.getDescription());
     }
 
+    @Override
+    public void displayError(final String message) {
+        System.err.println("ERROR: " + message); //NOPMD: allowed as this is just an exercise
+    }
+
 }
