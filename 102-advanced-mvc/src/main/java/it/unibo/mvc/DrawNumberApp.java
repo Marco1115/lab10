@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -12,9 +13,7 @@ import java.util.StringTokenizer;
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
+
     private static final String PATH = "src/main/resources/config.yml";
 
     private final DrawNumber model;
@@ -39,7 +38,9 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
 
     private Configuration readConfiguration(final String path) {
         final Configuration.Builder confBuilder = new Configuration.Builder();
-        try (BufferedReader inStream = new BufferedReader(new InputStreamReader(new FileInputStream(PATH)))) {
+        try (BufferedReader inStream = new BufferedReader(
+            new InputStreamReader(
+                new FileInputStream(path), StandardCharsets.UTF_8))) {
             for (int i = 0; i < 3; i++) {
                 final StringTokenizer tokenizer = new StringTokenizer(inStream.readLine(), ": ");
                 switch (tokenizer.nextToken()) {
@@ -52,13 +53,14 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
                     case "attempts":
                         confBuilder.setAttempts(Integer.parseInt(tokenizer.nextToken()));
                         break;
+                    default:
                 }
             }
         } catch (final IOException e) {
             for (final DrawNumberView v: views) {
                 v.displayError(e.getMessage());
             }
-            e.printStackTrace();
+            return new Configuration.Builder().build();
         }
         return confBuilder.build();
     }
@@ -70,7 +72,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             for (final DrawNumberView view: views) {
                 view.result(result);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             for (final DrawNumberView view: views) {
                 view.numberIncorrect();
             }
@@ -96,10 +98,10 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     /**
      * @param args
      *            ignored
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException if the file is not found
      */
     public static void main(final String... args) throws FileNotFoundException {
-        new DrawNumberApp(new DrawNumberViewImpl());
+        new DrawNumberApp(new DrawNumberViewImpl(), new PrintStreamView(System.out));
     }
 
 }
