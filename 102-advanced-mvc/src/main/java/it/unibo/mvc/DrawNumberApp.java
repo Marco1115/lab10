@@ -1,8 +1,14 @@
 package it.unibo.mvc;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.module.ModuleDescriptor.Builder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  */
@@ -10,6 +16,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     private static final int MIN = 0;
     private static final int MAX = 100;
     private static final int ATTEMPTS = 10;
+    private static final String PATH = "src/main/resources/config.yml";
 
     private final DrawNumber model;
     private final List<DrawNumberView> views;
@@ -27,7 +34,34 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        final Configuration conf = readConfiguration(PATH);
+        this.model = new DrawNumberImpl(conf.getMin(), conf.getMax(), conf.getAttempts());
+    }
+
+    private Configuration readConfiguration(String path) {
+        final Configuration.Builder confBuilder = new Configuration.Builder();
+        try (BufferedReader inStream = new BufferedReader(new InputStreamReader(new FileInputStream(PATH)))) {
+            for (int i = 0; i < 3; i++) {
+                final StringTokenizer tokenizer = new StringTokenizer(inStream.readLine(), ": ");
+                switch (tokenizer.nextToken()) {
+                    case "minimum":
+                        confBuilder.setMin(Integer.parseInt(tokenizer.nextToken()));
+                        break;
+                    case "maximum":
+                        confBuilder.setMax(Integer.parseInt(tokenizer.nextToken()));
+                        break;
+                    case "attempts":
+                        confBuilder.setAttempts(Integer.parseInt(tokenizer.nextToken()));
+                        break;
+                }
+            }
+        } catch (final IOException e) {
+            for (final DrawNumberView v: views) {
+                v.displayError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+        return confBuilder.build();
     }
 
     @Override
