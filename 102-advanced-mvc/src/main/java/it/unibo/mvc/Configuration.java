@@ -45,53 +45,55 @@ public final class Configuration {
 
     /**
      * Pattern builder: used here because:
+     * <br>
      * - all the parameters of the Configuration class have a default value, which
      * means that we would like to have all the possible combinations of
      * constructors (one with three parameters, three with two parameters, three
      * with a single parameter), which are way too many and confusing to use
+     * <br>
      * - moreover, it would be impossible to provide all of them, because they are
-     * all of the same type, and only a single constructor can exist with a given
+     * all the same type, and only a single constructor can exist with a given
      * list of parameter types.
+     * <br>
      * - the Configuration class has three parameters of the same type, and it is
-     * unclear to understand, in a call to its contructor, which is which. By using
+     * unclear to understand, in a call to its constructor, which is which. By using
      * the builder, we emulate the so-called "named arguments".
-     * 
      */
     public static class Builder {
 
-        private static final int MIN = 0;
-        private static final int MAX = 100;
-        private static final int ATTEMPTS = 10;
+        private static final int DEFAULT_MIN = 0;
+        private static final int DEFAULT_MAX = 100;
+        private static final int DEFAULT_ATTEMPTS = 10;
 
-        private int min = MIN;
-        private int max = MAX;
-        private int attempts = ATTEMPTS;
-        private boolean consumed = false;
+        private int currentMin = DEFAULT_MIN;
+        private int currentMax = DEFAULT_MAX;
+        private int currentAttempts = DEFAULT_ATTEMPTS;
+        private boolean consumed;
 
         /**
-         * @param minimum the minimum value
+         * @param min the minimum value
          * @return this builder, for method chaining
          */
-        public Builder setMin(final int minimum) {
-            this.min = minimum;
+        public Builder withMin(final int min) {
+            this.currentMin = min;
             return this;
         }
 
         /**
-         * @param maximum the maximum value
+         * @param max the maximum value
          * @return this builder, for method chaining
          */
-        public Builder setMax(final int maximum) {
-            this.max = maximum;
+        public Builder withMax(final int max) {
+            this.currentMax = max;
             return this;
         }
 
         /**
-         * @param attemptsNumber the attempts count
+         * @param attempts the attempts count
          * @return this builder, for method chaining
          */
-        public Builder setAttempts(final int attemptsNumber) {
-            this.attempts = attemptsNumber;
+        public Builder withAttempts(final int attempts) {
+            this.currentAttempts = attempts;
             return this;
         }
 
@@ -103,7 +105,7 @@ public final class Configuration {
                 throw new IllegalStateException("The builder can only be used once");
             }
             consumed = true;
-            return new Configuration(max, min, attempts);
+            return new Configuration(currentMax, currentMin, currentAttempts);
         }
     }
 }

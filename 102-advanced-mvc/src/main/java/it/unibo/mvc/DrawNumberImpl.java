@@ -15,9 +15,9 @@ public final class DrawNumberImpl implements DrawNumber {
     private final Random random = new Random();
 
     /**
-     * @param min minimum number
-     * @param max maximum number
-     * @param attempts number of attempts
+     * @param min The minimum allowed number
+     * @param max The maximum allowed number
+     * @param attempts The maximum attempts count
      * @throws IllegalStateException if the configuration is not consistent
      */
     public DrawNumberImpl(final int min, final int max, final int attempts) {

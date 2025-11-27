@@ -2,6 +2,8 @@ package it.unibo.mvc;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,13 +47,13 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
                 final StringTokenizer tokenizer = new StringTokenizer(inStream.readLine(), ": ");
                 switch (tokenizer.nextToken()) {
                     case "minimum":
-                        confBuilder.setMin(Integer.parseInt(tokenizer.nextToken()));
+                        confBuilder.withMin(Integer.parseInt(tokenizer.nextToken()));
                         break;
                     case "maximum":
-                        confBuilder.setMax(Integer.parseInt(tokenizer.nextToken()));
+                        confBuilder.withMax(Integer.parseInt(tokenizer.nextToken()));
                         break;
                     case "attempts":
-                        confBuilder.setAttempts(Integer.parseInt(tokenizer.nextToken()));
+                        confBuilder.withAttempts(Integer.parseInt(tokenizer.nextToken()));
                         break;
                     default:
                 }
@@ -85,6 +87,10 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     }
 
     @Override
+    @SuppressFBWarnings(
+        value = "DM_EXIT",
+        justification = "Acceptable for exercising purposes."
+    )
     public void quit() {
         /*
          * A bit harsh. A good application should configure the graphics to exit by
@@ -98,7 +104,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     /**
      * @param args
      *            ignored
-     * @throws FileNotFoundException if the file is not found
+     * @throws FileNotFoundException if the configuration file cannot be fetched
      */
     public static void main(final String... args) throws FileNotFoundException {
         new DrawNumberApp(new DrawNumberViewImpl(), new PrintStreamView(System.out));

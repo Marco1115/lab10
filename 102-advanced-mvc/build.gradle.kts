@@ -8,6 +8,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.8")
+}
+
 application {
     mainClass.set("it.unibo.mvc.DrawNumberApp")
 }
