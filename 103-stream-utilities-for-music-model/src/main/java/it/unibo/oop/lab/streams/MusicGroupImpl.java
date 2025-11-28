@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -63,7 +64,9 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
-        return OptionalDouble.empty();
+        return OptionalDouble.of(this.songs.stream()
+                .filter(s -> s.getAlbumName().equals(Optional.of(albumName)))
+                .collect(Collectors.averagingDouble(Song::getDuration)));
     }
 
     @Override
