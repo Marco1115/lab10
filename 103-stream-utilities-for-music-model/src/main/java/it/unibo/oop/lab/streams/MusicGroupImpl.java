@@ -32,14 +32,14 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return songs.stream()
+        return this.songs.stream()
                 .map(Song::getSongName)
                 .sorted(String::compareTo);
     }
 
     @Override
     public Stream<String> albumNames() {
-        return albums.keySet().stream();
+        return this.albums.keySet().stream();
     }
 
     @Override
